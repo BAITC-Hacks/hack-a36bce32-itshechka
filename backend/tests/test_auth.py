@@ -3,14 +3,14 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.services.user_store import user_store
+from app.core.database import database
 
 
 client = TestClient(app)
 
 
 def test_auth_flow(tmp_path: Path) -> None:
-    user_store.data_file = tmp_path / "users.json"
+    database.path = tmp_path / "app.db"
     credentials = {
         "name": "Demo Student",
         "email": "demo@example.com",
@@ -34,4 +34,3 @@ def test_health() -> None:
     response = client.get("/api/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
-

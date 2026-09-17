@@ -1,12 +1,28 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { requestMaterials } from '../services/lectureApi';
+import { deleteLecture, fetchLectures, requestMaterials } from '../services/lectureApi';
 
 const useLectureStore = create(
   persist(
     (set, get) => ({
       lectures: [],
       materials: {},
+      isHydrating: false,
+      hasHydrated: false,
+      async hydrate() {
+        set({ isHydrating: true });
+        try {
+          const result = await fetchLectures();
+          if (result) {
+            set({
+              lectures: result.lectures.map(({ materials, ...lecture }) => lecture),
+              materials: Object.fromEntries(result.lectures.filter((item) => item.materials).map((item) => [item.id, item.materials])),
+            });
+          }
+        } finally {
+          set({ isHydrating: false, hasHydrated: true });
+        }
+      },
       addLecture({ title, text }) {
         const lecture = {
           id: crypto.randomUUID(),
@@ -22,6 +38,9 @@ const useLectureStore = create(
       async processLecture(id) {
         const lecture = get().lectures.find((item) => item.id === id);
         if (!lecture || lecture.status === 'completed') return lecture;
+        set((state) => ({
+          lectures: state.lectures.map((item) => item.id === id ? { ...item, status: 'processing', error: null } : item),
+        }));
         try {
           const result = await requestMaterials(lecture);
           set((state) => ({
@@ -36,14 +55,18 @@ const useLectureStore = create(
           throw error;
         }
       },
-      removeLecture(id) {
+      async removeLecture(id) {
+        await deleteLecture(id);
         set((state) => ({
           lectures: state.lectures.filter((item) => item.id !== id),
           materials: Object.fromEntries(Object.entries(state.materials).filter(([key]) => key !== id)),
         }));
       },
+      clear() {
+        set({ lectures: [], materials: {}, isHydrating: false, hasHydrated: false });
+      },
     }),
-    { name: 'hackalem-lectures' },
+    { name: 'hackalem-lectures', partialize: ({ lectures, materials }) => ({ lectures, materials }) },
   ),
 );
 

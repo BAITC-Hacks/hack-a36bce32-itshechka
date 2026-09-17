@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import router as auth_router
+from app.api.lectures import router as lectures_router
 from app.core.config import API_PREFIX, CLIENT_ORIGIN
 
 
@@ -21,4 +22,4 @@ async def health() -> dict[str, str]:
 
 
 app.include_router(auth_router, prefix=API_PREFIX)
-
+app.include_router(lectures_router, prefix=API_PREFIX)

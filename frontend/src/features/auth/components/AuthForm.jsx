@@ -12,14 +12,14 @@ export default function AuthForm({ mode }) {
 
   useEffect(() => {
     clearError();
-    if (token) navigate('/', { replace: true });
+    if (token) navigate('/app', { replace: true });
   }, [clearError, navigate, token]);
 
   const update = (event) => setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
   const submit = async (event) => {
     event.preventDefault();
     const payload = isRegister ? form : { email: form.email, password: form.password };
-    if (await authenticate(mode, payload)) navigate('/', { replace: true });
+    if (await authenticate(mode, payload)) navigate('/app', { replace: true });
   };
 
   return (

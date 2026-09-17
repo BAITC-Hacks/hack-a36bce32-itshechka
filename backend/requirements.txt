@@ -1,6 +1,6 @@
 fastapi
+httpx
 uvicorn[standard]
 PyJWT
 python-dotenv
 email-validator
-

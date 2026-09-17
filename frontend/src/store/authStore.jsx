@@ -7,6 +7,7 @@ const useAuthStore = create(
     (set) => ({
       token: null,
       user: null,
+      isInitialized: false,
       isLoading: false,
       error: null,
       async authenticate(mode, credentials) {
@@ -16,7 +17,7 @@ const useAuthStore = create(
             method: 'POST',
             body: JSON.stringify(credentials),
           });
-          set({ token: result.token, user: result.user, isLoading: false });
+          set({ token: result.token, user: result.user, isLoading: false, isInitialized: true });
           return true;
         } catch (error) {
           set({ error: error.message, isLoading: false });
@@ -24,7 +25,21 @@ const useAuthStore = create(
         }
       },
       logout() {
-        set({ token: null, user: null, error: null });
+        set({ token: null, user: null, error: null, isInitialized: true });
+        window.dispatchEvent(new Event('session:cleared'));
+      },
+      async verifySession() {
+        const token = useAuthStore.getState().token;
+        if (!token) {
+          set({ isInitialized: true });
+          return;
+        }
+        try {
+          const result = await apiRequest('/auth/me');
+          set({ user: result.user, isInitialized: true });
+        } catch {
+          set({ token: null, user: null, isInitialized: true });
+        }
       },
       clearError() {
         set({ error: null });

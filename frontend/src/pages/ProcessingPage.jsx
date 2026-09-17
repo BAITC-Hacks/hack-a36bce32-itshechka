@@ -1,8 +1,9 @@
-import { BrainCircuit } from 'lucide-react';
+import { BrainCircuit, RotateCcw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import ProcessingSteps from '../features/lecture/components/ProcessingSteps';
 import Card from '../shared/ui/Card';
+import Button from '../shared/ui/Button';
 import useLectureStore from '../store/lectureStore';
 
 export default function ProcessingPage() {
@@ -10,6 +11,7 @@ export default function ProcessingPage() {
   const navigate = useNavigate();
   const hasStarted = useRef(false);
   const [step, setStep] = useState(0);
+  const [attempt, setAttempt] = useState(0);
   const lecture = useLectureStore((state) => state.lectures.find((item) => item.id === lectureId));
   const processLecture = useLectureStore((state) => state.processLecture);
 
@@ -19,7 +21,13 @@ export default function ProcessingPage() {
     const interval = setInterval(() => setStep((value) => Math.min(value + 1, 2)), 550);
     processLecture(lectureId).then(() => navigate(`/lectures/${lectureId}`, { replace: true })).catch(() => {});
     return () => clearInterval(interval);
-  }, [lecture, lectureId, navigate, processLecture]);
+  }, [attempt, lecture, lectureId, navigate, processLecture]);
+
+  function retry() {
+    hasStarted.current = false;
+    setStep(0);
+    setAttempt((value) => value + 1);
+  }
 
   if (!lecture) return <Navigate to="/history" replace />;
   if (lecture.status === 'completed') return <Navigate to={`/lectures/${lectureId}`} replace />;
@@ -32,7 +40,7 @@ export default function ProcessingPage() {
         <h1 className="mt-2 text-2xl font-bold text-slate-950">{lecture.title}</h1>
         <p className="mt-3 text-sm leading-6 text-slate-500">Обычно это занимает меньше минуты. Не закрывайте страницу.</p>
         <div className="mt-8 text-left"><ProcessingSteps activeStep={step} /></div>
-        {lecture.status === 'failed' && <p className="mt-5 rounded-xl bg-red-50 p-3 text-sm text-red-700">{lecture.error || 'Не удалось обработать лекцию.'}</p>}
+        {lecture.status === 'failed' && <div className="mt-5 rounded-xl bg-red-50 p-4 text-sm text-red-700"><p>{lecture.error || 'Не удалось обработать лекцию.'}</p><Button className="mt-3" onClick={retry} size="sm" variant="secondary"><RotateCcw size={15} />Повторить</Button></div>}
       </Card>
     </div>
   );

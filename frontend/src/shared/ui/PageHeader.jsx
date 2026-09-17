@@ -6,7 +6,7 @@ export default function PageHeader({ eyebrow, title, description, action }) {
         <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{title}</h1>
         {description && <p className="mt-3 max-w-2xl leading-7 text-slate-600">{description}</p>}
       </div>
-      {action}
+      {action && <div className="w-full sm:w-auto [&>*]:w-full sm:[&>*]:w-auto">{action}</div>}
     </div>
   );
 }

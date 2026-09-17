@@ -1,14 +1,12 @@
-import { BookOpen, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
+import Brand from '../../../shared/ui/Brand';
 
 export default function AuthLayout({ children }) {
   return (
     <main className="grid min-h-screen bg-white lg:grid-cols-[1fr_1.05fr]">
       <section className="flex items-center justify-center px-5 py-10 sm:px-10">
         <div className="w-full max-w-md">
-          <div className="mb-10 flex items-center gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-xl bg-brand-600 text-white"><BookOpen size={22} /></div>
-            <div><p className="font-bold text-slate-950">Lectora</p><p className="text-xs text-slate-400">HackAlem AI</p></div>
-          </div>
+          <div className="mb-10"><Brand /></div>
           {children}
         </div>
       </section>

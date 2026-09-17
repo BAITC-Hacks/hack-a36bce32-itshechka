@@ -19,8 +19,8 @@ export default function MaterialLayout() {
     <div>
       <Link className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-950" to="/history"><ArrowLeft size={16} />Все материалы</Link>
       <div className="mt-5 flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
-        <div><div className="flex flex-wrap items-center gap-2"><Badge tone="success">Готово</Badge><span className="text-xs text-slate-400">{lecture.wordCount} слов</span></div><h1 className="mt-3 text-3xl font-bold tracking-tight text-slate-950">{lecture.title}</h1></div>
-        <button className="inline-flex items-center gap-2 self-start rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50" onClick={() => setIsSourceOpen(true)}><FileText size={17} />Исходный текст</button>
+        <div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><Badge tone="success">Готово</Badge><span className="text-xs text-slate-400">{lecture.wordCount} слов</span></div><h1 className="mt-3 break-words text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{lecture.title}</h1></div>
+        <button className="inline-flex w-full items-center justify-center gap-2 self-start rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:bg-slate-50 active:translate-y-0 sm:w-auto" onClick={() => setIsSourceOpen(true)}><FileText size={17} />Исходный текст</button>
       </div>
       <div className="mt-7"><MaterialTabs /></div>
       <div className="mt-5"><Outlet context={{ lecture, materials }} /></div>
