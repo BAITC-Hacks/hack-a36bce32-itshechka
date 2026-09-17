@@ -13,7 +13,7 @@ export default function LandingFooter() {
           <div><p className="text-sm font-semibold text-brand-500">Можно начинать</p><h2 className="mt-3 max-w-2xl text-3xl font-bold tracking-tight sm:text-5xl">Превратите следующую лекцию в готовый план подготовки</h2></div>
           <Button as={Link} className="whitespace-nowrap" size="lg" to={token ? '/app' : '/register'}>{token ? 'Открыть пространство' : 'Создать аккаунт'}<ArrowRight size={18} /></Button>
         </div>
-        <div className="flex flex-col justify-between gap-5 pt-8 sm:flex-row sm:items-center"><Brand inverse /><p className="text-xs text-slate-500">HackAlem AI · Учебный веб-прототип</p></div>
+        <div className="flex flex-col justify-between gap-5 pt-8 sm:flex-row sm:items-center"><Brand inverse /><div className="text-xs text-slate-500 sm:text-right"><p>HackAlem AI · Учебный веб-прототип</p><p className="mt-1">Made by <span className="font-semibold text-slate-300">ITshechka</span></p></div></div>
       </div>
     </footer>
   );
