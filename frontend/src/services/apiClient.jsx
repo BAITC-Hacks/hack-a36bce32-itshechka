@@ -10,6 +10,11 @@ export async function apiRequest(path, options = {}) {
   });
 
   const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(payload.detail || 'Не удалось выполнить запрос');
+  if (!response.ok) {
+    const detail = Array.isArray(payload.detail)
+      ? payload.detail.map((item) => item.msg).join('. ')
+      : payload.detail;
+    throw new Error(detail || 'Не удалось выполнить запрос');
+  }
   return payload;
 }
