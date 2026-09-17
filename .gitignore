@@ -1,0 +1,9 @@
+node_modules/
+.env
+backend/data/users.json
+frontend/build/
+frontend/src/tailwind.css
+__pycache__/
+.venv/
+.DS_Store
+
